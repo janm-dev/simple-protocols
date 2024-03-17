@@ -242,9 +242,12 @@ checksum = "248e3bacc7dc6baa3b21e405ee045c3047101a49145e7e9eca583ab4c2ca5345"
 
 [[package]]
 name = "decancer"
-version = "1.6.5"
+version = "3.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "080b09f6adad25c23d8c47c54e52e59b0dc09d079c4b23e0f147dac440359d0d"
+checksum = "0103e221d1e9e9b00b35aee177797a4f92d6aeab5752f256812639136b13557a"
+dependencies = [
+ "paste",
+]
 
 [[package]]
 name = "deranged"
@@ -565,6 +568,12 @@ name = "parking"
 version = "2.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e52c774a4c39359c1d1c52e43f73dd91a75a614652c825408eec30c95a9b2067"
+
+[[package]]
+name = "paste"
+version = "1.0.14"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "de3145af08024dea9fa9914f381a17b8fc6034dfb00f3a84013f7ff43f29ed4c"
 
 [[package]]
 name = "pico-args"
