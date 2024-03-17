@@ -73,7 +73,7 @@ fn udp(ip: IpAddr) {
 	loop {
 		n += match udp.recv(&mut buf[n..]) {
 			Ok(n) => n,
-			Err(e) if e.kind() == ErrorKind::TimedOut => {
+			Err(e) if e.kind() == ErrorKind::TimedOut || e.kind() == ErrorKind::WouldBlock => {
 				break;
 			}
 			res => {
