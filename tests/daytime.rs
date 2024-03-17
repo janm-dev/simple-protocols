@@ -45,7 +45,7 @@ fn tcp(ip: IpAddr) {
 
 	// "The service closes the connection after sending the quote [sic]."
 	thread::sleep(Duration::from_secs(1));
-	let res = write!(tcp, "Hello, World!");
+	let res = dbg!(write!(tcp, "Hello, World!"));
 	assert!(
 		res.is_ok()
 			|| matches!(res, Err(ref e) if e.kind() == ErrorKind::ConnectionAborted)
