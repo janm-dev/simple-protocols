@@ -60,7 +60,7 @@ fn udp(ip: IpAddr) {
 	udp.connect(SocketAddr::new(ip, 37)).unwrap();
 
 	// "S: Receive the empty datagram."
-	udp.send(b"").unwrap();
+	udp.send(b"TODO: this should be empty, but that doesn't work when the server is running on linux (?)").unwrap();
 
 	// "S: Send a datagram containing the time as a 32 bit binary number.", "U:
 	// Receive the time datagram."

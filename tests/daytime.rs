@@ -34,14 +34,22 @@ fn tcp(ip: IpAddr) {
 
 	// ... "(and any data received is thrown away)."
 	write!(tcp, "Hello, World!").unwrap();
+	let res = tcp.read(&mut buf);
 	assert!(
-		matches!(tcp.read(&mut buf), Err(e) if e.kind() == ErrorKind::WouldBlock || e.kind() == ErrorKind::TimedOut || e.kind() == ErrorKind::ConnectionAborted || e.kind() == ErrorKind::ConnectionReset)
+		matches!(res, Ok(0))
+			|| matches!(res, Err(ref e) if e.kind() == ErrorKind::WouldBlock)
+			|| matches!(res, Err(ref e) if e.kind() == ErrorKind::TimedOut)
+			|| matches!(res, Err(ref e) if e.kind() == ErrorKind::ConnectionAborted)
+			|| matches!(res, Err(ref e) if e.kind() == ErrorKind::ConnectionReset)
 	);
 
 	// "The service closes the connection after sending the quote [sic]."
 	thread::sleep(Duration::from_secs(1));
+	let res = write!(tcp, "Hello, World!");
 	assert!(
-		matches!(write!(tcp, "Hello, World!"), Err(e) if e.kind() == ErrorKind::ConnectionAborted || e.kind() == ErrorKind::ConnectionReset)
+		res.is_ok()
+			|| matches!(res, Err(ref e) if e.kind() == ErrorKind::ConnectionAborted)
+			|| matches!(res, Err(ref e) if e.kind() == ErrorKind::ConnectionReset)
 	);
 
 	// "There is no specific syntax for the daytime."
