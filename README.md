@@ -9,6 +9,8 @@ Implementations of some simple network protocols/services:
 |        Active Users |   TCP/UDP |    11 |  [RFC 866] |    `active` |
 |             Daytime |   TCP/UDP |    13 |  [RFC 867] |   `daytime` |
 |    Quote of the Day |   TCP/UDP |    17 |  [RFC 865] |      `qotd` |
+|        Message Send |   TCP/UDP |    18 | [RFC 1159] | `message-1` |
+|      Message Send 2 |   TCP/UDP |    18 | [RFC 1312] | `message-2` |
 | Character Generator |   TCP/UDP |    19 |  [RFC 864] |   `chargen` |
 |                Time |   TCP/UDP |    37 |  [RFC 868] |      `time` |
 |              Gopher |       TCP |    70 | [RFC 1436] |    `gopher` |
@@ -18,6 +20,8 @@ Implementations of some simple network protocols/services:
 [RFC 866]: https://datatracker.ietf.org/doc/html/rfc866
 [RFC 867]: https://datatracker.ietf.org/doc/html/rfc867
 [RFC 865]: https://datatracker.ietf.org/doc/html/rfc865
+[RFC 1159]: https://datatracker.ietf.org/doc/html/rfc1159
+[RFC 1312]: https://datatracker.ietf.org/doc/html/rfc1312
 [RFC 864]: https://datatracker.ietf.org/doc/html/rfc864
 [RFC 868]: https://datatracker.ietf.org/doc/html/rfc868
 [RFC 1436]: https://datatracker.ietf.org/doc/html/rfc1436
@@ -34,6 +38,8 @@ Active Users sends a list of random, fictitious users.
 
 Quote of the Day sends a randomly selected quote from <https://api.quotable.io/>.
 The quotes are compiled into the binary, and no API requests are made at runtime.
+
+Message Send 1 and 2 are served on the same socket, differentiated by their own version indicator.
 
 Gopher only supports basic (read-only) operations, with content from the fake file system.
 

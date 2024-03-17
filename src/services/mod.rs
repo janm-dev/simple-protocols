@@ -23,6 +23,8 @@ mod discard;
 mod echo;
 #[cfg(feature = "gopher")]
 mod gopher;
+#[cfg(any(feature = "message-1", feature = "message-2"))]
+mod message;
 #[cfg(feature = "qotd")]
 mod qotd;
 #[cfg(feature = "time")]
@@ -152,6 +154,7 @@ pub fn spawn_all() {
 	service!(if "discard" serve discard(config));
 	service!(if "echo" serve echo(config));
 	service!(if "gopher" serve gopher(config));
+	service!(if "message-1" || "message-2" serve message(config));
 	service!(if "qotd" serve qotd(config));
 	service!(if "time" serve time(config));
 }
