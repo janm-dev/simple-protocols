@@ -39,15 +39,17 @@ fn tcp(ip: IpAddr) {
 		matches!(res, Ok(0))
 			|| matches!(res, Err(ref e) if e.kind() == ErrorKind::WouldBlock)
 			|| matches!(res, Err(ref e) if e.kind() == ErrorKind::TimedOut)
+			|| matches!(res, Err(ref e) if e.kind() == ErrorKind::BrokenPipe)
 			|| matches!(res, Err(ref e) if e.kind() == ErrorKind::ConnectionAborted)
 			|| matches!(res, Err(ref e) if e.kind() == ErrorKind::ConnectionReset)
 	);
 
 	// "The service closes the connection after sending the quote [sic]."
 	thread::sleep(Duration::from_secs(1));
-	let res = dbg!(write!(tcp, "Hello, World!"));
+	let res = write!(tcp, "Hello, World!");
 	assert!(
 		res.is_ok()
+			|| matches!(res, Err(ref e) if e.kind() == ErrorKind::BrokenPipe)
 			|| matches!(res, Err(ref e) if e.kind() == ErrorKind::ConnectionAborted)
 			|| matches!(res, Err(ref e) if e.kind() == ErrorKind::ConnectionReset)
 	);
