@@ -7,11 +7,13 @@ Implementations of some simple network protocols/services:
 |                Echo |   TCP/UDP |     7 |  [RFC 862] |      `echo` |
 |             Discard |   TCP/UDP |     9 |  [RFC 863] |   `discard` |
 |        Active Users |   TCP/UDP |    11 |  [RFC 866] |    `active` |
+|             Daytime |   TCP/UDP |    13 |  [RFC 867] |   `daytime` |
 | Character Generator |   TCP/UDP |    19 |  [RFC 864] |   `chargen` |
 
 [RFC 862]: https://datatracker.ietf.org/doc/html/rfc862
 [RFC 863]: https://datatracker.ietf.org/doc/html/rfc863
 [RFC 866]: https://datatracker.ietf.org/doc/html/rfc866
+[RFC 867]: https://datatracker.ietf.org/doc/html/rfc867
 [RFC 864]: https://datatracker.ietf.org/doc/html/rfc864
 
 All features are enabled by default.

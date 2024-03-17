@@ -9,10 +9,17 @@ repository = "https://github.com/janm-dev/simple-protocols"
 rust-version = "1.76.0"
 
 [features]
-default = ["echo", "discard", "active", "chargen"]
+default = [
+	"echo",
+	"discard",
+	"active",
+	"daytime",
+	"chargen",
+]
 echo = []
 discard = []
 active = []
+daytime = []
 chargen = []
 
 [dependencies]

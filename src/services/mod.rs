@@ -15,6 +15,8 @@ use pico_args::Arguments;
 mod active;
 #[cfg(feature = "chargen")]
 mod chargen;
+#[cfg(feature = "daytime")]
+mod daytime;
 #[cfg(feature = "discard")]
 mod discard;
 #[cfg(feature = "echo")]
@@ -140,6 +142,7 @@ pub fn spawn_all() {
 
 	service!(if "active" serve active(config));
 	service!(if "chargen" serve chargen(config));
+	service!(if "daytime" serve daytime(config));
 	service!(if "discard" serve discard(config));
 	service!(if "echo" serve echo(config));
 }
