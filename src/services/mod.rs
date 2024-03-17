@@ -11,6 +11,8 @@ use pico_args::Arguments;
 
 // Declare the modules here because rust-analyzer wasn't too happy with
 // declaring them inside of the `service` macro
+#[cfg(feature = "active")]
+mod active;
 #[cfg(feature = "chargen")]
 mod chargen;
 #[cfg(feature = "discard")]
@@ -136,6 +138,7 @@ macro_rules! service {
 pub fn spawn_all() {
 	let config = Config::from_args().expect("argument parsing");
 
+	service!(if "active" serve active(config));
 	service!(if "chargen" serve chargen(config));
 	service!(if "discard" serve discard(config));
 	service!(if "echo" serve echo(config));

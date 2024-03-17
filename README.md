@@ -6,10 +6,12 @@ Implementations of some simple network protocols/services:
 | ------------------- | --------- | ----- | ---------- | ----------- |
 |                Echo |   TCP/UDP |     7 |  [RFC 862] |      `echo` |
 |             Discard |   TCP/UDP |     9 |  [RFC 863] |   `discard` |
+|        Active Users |   TCP/UDP |    11 |  [RFC 866] |    `active` |
 | Character Generator |   TCP/UDP |    19 |  [RFC 864] |   `chargen` |
 
 [RFC 862]: https://datatracker.ietf.org/doc/html/rfc862
 [RFC 863]: https://datatracker.ietf.org/doc/html/rfc863
+[RFC 866]: https://datatracker.ietf.org/doc/html/rfc866
 [RFC 864]: https://datatracker.ietf.org/doc/html/rfc864
 
 All features are enabled by default.
@@ -19,6 +21,8 @@ All features are enabled by default.
 There is a "fake" filesystem embedded into the binary by the build script, which is used for protocols that require a file system or similar as data.
 The file system is read-only, and because it is embedded into the server binary, does not require runtime file system access.
 Using the real file system of the host computer is not supported.
+
+Active Users sends a list of random, fictitious users.
 
 ## Tests
 
