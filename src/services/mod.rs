@@ -13,6 +13,8 @@ use pico_args::Arguments;
 // declaring them inside of the `service` macro
 #[cfg(feature = "discard")]
 mod discard;
+#[cfg(feature = "echo")]
+mod echo;
 
 #[derive(Debug, Clone, Copy)]
 pub enum ServiceRet {}
@@ -133,4 +135,5 @@ pub fn spawn_all() {
 	let config = Config::from_args().expect("argument parsing");
 
 	service!(if "discard" serve discard(config));
+	service!(if "echo" serve echo(config));
 }

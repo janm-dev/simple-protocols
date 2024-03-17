@@ -9,7 +9,9 @@ repository = "https://github.com/janm-dev/simple-protocols"
 rust-version = "1.76.0"
 
 [features]
-default = []
+default = ["echo", "discard"]
+echo = []
+discard = []
 
 [dependencies]
 anyhow = "1.0.75"
