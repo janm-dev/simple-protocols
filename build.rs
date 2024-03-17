@@ -5,6 +5,7 @@ use std::{
 	path::{Path, PathBuf},
 };
 
+use decancer::Options;
 use ignore::gitignore::Gitignore;
 use serde::Deserialize;
 
@@ -77,7 +78,9 @@ fn main() -> Result<(), Box<dyn Error>> {
 	let mut out = String::new();
 	for username in usernames {
 		let username = username.to_lowercase().replace([' ', '\''], "_");
-		let username = decancer::cure(&username);
+		let username = decancer::cure(&username, Options::default())
+			.map(|s| s.to_string())
+			.unwrap_or(username);
 		let username = username.trim();
 
 		if username
@@ -106,7 +109,7 @@ fn asciify(s: &str) -> String {
 		if char.is_ascii() {
 			res.push(char);
 		} else {
-			let mut new = decancer::cure_char(char).to_string();
+			let mut new = decancer::cure_char!(char).to_string();
 			if char.is_uppercase() {
 				new.make_ascii_uppercase();
 			}
@@ -191,7 +194,9 @@ fn get_fs() -> String {
 fn get_users() -> String {
 	fn ensure_valid_username(username: String) -> Option<String> {
 		let username = username.to_lowercase().replace([' ', '\''], "_");
-		let username = decancer::cure(&username);
+		let username = decancer::cure(&username, Options::default())
+			.map(|s| s.to_string())
+			.unwrap_or(username);
 		let username = username.trim();
 
 		if username
