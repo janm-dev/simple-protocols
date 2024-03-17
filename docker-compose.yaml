@@ -1,0 +1,49 @@
+version: "3.9"
+
+services:
+  simple-protocols:
+    build:
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "1:1/tcp"
+      - "7:7/tcp"
+      - "7:7/udp"
+      - "9:9/tcp"
+      - "9:9/udp"
+      - "11:11/tcp"
+      - "11:11/udp"
+      - "13:13/tcp"
+      - "13:13/udp"
+      - "17:17/tcp"
+      - "17:17/udp"
+      - "18:18/tcp"
+      - "18:18/udp"
+      - "19:19/tcp"
+      - "19:19/udp"
+      - "20:20/tcp"
+      - "21:21/tcp"
+      - "23:23/tcp"
+      - "37:37/tcp"
+      - "37:37/udp"
+      - "53:53/udp"
+      - "69:69/udp"
+      - "70:70/tcp"
+      - "79:79/tcp"
+      - "80:80/tcp"
+      - "101:101/tcp"
+      - "105:105/tcp"
+      - "113:113/tcp"
+      - "115:115/tcp"
+      - "119:119/tcp"
+      - "123:123/udp"
+      - "194:194/tcp"
+      - "218:218/tcp"
+      - "389:389/tcp"
+      - "427:427/udp"
+      - "444:444/tcp"
+    environment:
+      SIMPLE_PROTOCOLS_LOG: debug
+    command:
+      - "--hostname"
+      - "localhost"
