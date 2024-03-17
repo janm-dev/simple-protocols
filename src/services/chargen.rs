@@ -1,0 +1,97 @@
+//! The Character Generator Protocol ([RFC 864](https://datatracker.ietf.org/doc/html/rfc864))
+
+use std::net::SocketAddr;
+
+use async_std::{channel, channel::Sender, io::WriteExt, net::TcpStream, task::spawn};
+use const_str::concat_bytes;
+use log::{info, warn};
+use rand::Rng;
+
+use crate::{
+	services::{Config, Future, ServiceErr, ServiceRet, SimpleService},
+	tcp::Listener as TcpListener,
+	udp::Listener as UdpListener,
+	utils::FmtMaybeAddr,
+};
+
+pub const PORT: u16 = 19;
+const LINE_LEN: usize = 72;
+const LINE_END: &[u8] = b"\r\n";
+const CHARACTERS: &[u8] = br##"!"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~ "##;
+
+pub struct Service;
+
+impl SimpleService for Service {
+	fn tcp(_: &'static Config) -> Result<impl Future<Output = ServiceRet>, ServiceErr> {
+		Ok(async {
+			let (sender, receiver) = channel::unbounded();
+
+			TcpListener::spawn(PORT, sender)
+				.await
+				.expect("error creating listener");
+
+			loop {
+				let incoming = receiver.recv().await.expect("TCP channel closed");
+				info!(
+					"New CHARGEN connection from {}",
+					FmtMaybeAddr(&incoming.peer_addr())
+				);
+				spawn(handle_tcp(incoming));
+			}
+		})
+	}
+
+	fn udp(_: &'static Config) -> Result<impl Future<Output = ServiceRet>, ServiceErr> {
+		Ok(async {
+			let (sender, receiver) = channel::unbounded();
+
+			UdpListener::spawn(PORT, sender)
+				.await
+				.expect("error creating listener");
+
+			loop {
+				let incoming = receiver.recv().await.expect("UDP channel closed");
+				info!("New CHARGEN datagram from {}", incoming.1);
+				spawn(handle_udp(incoming));
+			}
+		})
+	}
+}
+
+async fn handle_tcp(mut stream: TcpStream) {
+	const CHARACTERS_2: &[u8] = concat_bytes!(CHARACTERS, CHARACTERS);
+
+	let mut buf = [0; LINE_LEN + LINE_END.len()];
+	buf[LINE_LEN..].copy_from_slice(LINE_END);
+
+	for i in (0..LINE_LEN).cycle() {
+		buf[..LINE_LEN].copy_from_slice(&CHARACTERS_2[i..(i + LINE_LEN)]);
+
+		if let Err(e) = stream.write_all(&buf).await {
+			warn!("error writing data: {e}");
+			break;
+		};
+	}
+
+	info!(
+		"Connection with {} closing",
+		FmtMaybeAddr(&stream.peer_addr())
+	);
+}
+
+async fn handle_udp((_, _, reply): (Vec<u8>, SocketAddr, Sender<Vec<u8>>)) {
+	const CHARACTERS_512: &[u8; 512] = b"\
+		!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefgh\r\n\
+		\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghi\r\n\
+		#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghij\r\n\
+		$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijk\r\n\
+		%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijkl\r\n\
+		&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklm\r\n\
+		'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghij\
+	";
+
+	let len = rand::thread_rng().gen_range(1..512);
+	if reply.send(CHARACTERS_512[..len].to_vec()).await.is_err() {
+		warn!("UDP channel closed");
+	};
+}
