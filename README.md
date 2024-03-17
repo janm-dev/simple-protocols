@@ -11,6 +11,7 @@ Implementations of some simple network protocols/services:
 |    Quote of the Day |   TCP/UDP |    17 |  [RFC 865] |      `qotd` |
 | Character Generator |   TCP/UDP |    19 |  [RFC 864] |   `chargen` |
 |                Time |   TCP/UDP |    37 |  [RFC 868] |      `time` |
+|              Gopher |       TCP |    70 | [RFC 1436] |    `gopher` |
 
 [RFC 862]: https://datatracker.ietf.org/doc/html/rfc862
 [RFC 863]: https://datatracker.ietf.org/doc/html/rfc863
@@ -19,6 +20,7 @@ Implementations of some simple network protocols/services:
 [RFC 865]: https://datatracker.ietf.org/doc/html/rfc865
 [RFC 864]: https://datatracker.ietf.org/doc/html/rfc864
 [RFC 868]: https://datatracker.ietf.org/doc/html/rfc868
+[RFC 1436]: https://datatracker.ietf.org/doc/html/rfc1436
 
 All features are enabled by default.
 
@@ -32,6 +34,8 @@ Active Users sends a list of random, fictitious users.
 
 Quote of the Day sends a randomly selected quote from <https://api.quotable.io/>.
 The quotes are compiled into the binary, and no API requests are made at runtime.
+
+Gopher only supports basic (read-only) operations, with content from the fake file system.
 
 ## Tests
 

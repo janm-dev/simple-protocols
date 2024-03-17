@@ -17,6 +17,7 @@ default = [
 	"qotd",
 	"chargen",
 	"time",
+	"gopher",
 ]
 echo = []
 discard = []
@@ -25,6 +26,7 @@ daytime = []
 qotd = []
 chargen = []
 time = []
+gopher = []
 
 [dependencies]
 anyhow = "1.0.75"
