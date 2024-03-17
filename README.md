@@ -4,6 +4,9 @@ Implementations of some simple network protocols/services:
 
 |            Protocol | Transport |  Port |   Standard |     Feature |
 | ------------------- | --------- | ----- | ---------- | ----------- |
+|             Discard |   TCP/UDP |     9 |  [RFC 863] |   `discard` |
+
+[RFC 863]: https://datatracker.ietf.org/doc/html/rfc863
 
 All features are enabled by default.
 

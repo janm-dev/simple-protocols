@@ -9,6 +9,11 @@ use std::{
 
 use pico_args::Arguments;
 
+// Declare the modules here because rust-analyzer wasn't too happy with
+// declaring them inside of the `service` macro
+#[cfg(feature = "discard")]
+mod discard;
+
 #[derive(Debug, Clone, Copy)]
 pub enum ServiceRet {}
 
@@ -126,4 +131,6 @@ macro_rules! service {
 
 pub fn spawn_all() {
 	let config = Config::from_args().expect("argument parsing");
+
+	service!(if "discard" serve discard(config));
 }
