@@ -8,6 +8,7 @@ Implementations of some simple network protocols/services:
 |             Discard |   TCP/UDP |     9 |  [RFC 863] |   `discard` |
 |        Active Users |   TCP/UDP |    11 |  [RFC 866] |    `active` |
 |             Daytime |   TCP/UDP |    13 |  [RFC 867] |   `daytime` |
+|    Quote of the Day |   TCP/UDP |    17 |  [RFC 865] |      `qotd` |
 | Character Generator |   TCP/UDP |    19 |  [RFC 864] |   `chargen` |
 |                Time |   TCP/UDP |    37 |  [RFC 868] |      `time` |
 
@@ -15,6 +16,7 @@ Implementations of some simple network protocols/services:
 [RFC 863]: https://datatracker.ietf.org/doc/html/rfc863
 [RFC 866]: https://datatracker.ietf.org/doc/html/rfc866
 [RFC 867]: https://datatracker.ietf.org/doc/html/rfc867
+[RFC 865]: https://datatracker.ietf.org/doc/html/rfc865
 [RFC 864]: https://datatracker.ietf.org/doc/html/rfc864
 [RFC 868]: https://datatracker.ietf.org/doc/html/rfc868
 
@@ -27,6 +29,9 @@ The file system is read-only, and because it is embedded into the server binary,
 Using the real file system of the host computer is not supported.
 
 Active Users sends a list of random, fictitious users.
+
+Quote of the Day sends a randomly selected quote from <https://api.quotable.io/>.
+The quotes are compiled into the binary, and no API requests are made at runtime.
 
 ## Tests
 

@@ -21,6 +21,8 @@ mod daytime;
 mod discard;
 #[cfg(feature = "echo")]
 mod echo;
+#[cfg(feature = "qotd")]
+mod qotd;
 #[cfg(feature = "time")]
 mod time;
 
@@ -147,5 +149,6 @@ pub fn spawn_all() {
 	service!(if "daytime" serve daytime(config));
 	service!(if "discard" serve discard(config));
 	service!(if "echo" serve echo(config));
+	service!(if "qotd" serve qotd(config));
 	service!(if "time" serve time(config));
 }
