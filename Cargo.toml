@@ -15,12 +15,14 @@ default = [
 	"active",
 	"daytime",
 	"chargen",
+	"time",
 ]
 echo = []
 discard = []
 active = []
 daytime = []
 chargen = []
+time = []
 
 [dependencies]
 anyhow = "1.0.75"

@@ -9,12 +9,14 @@ Implementations of some simple network protocols/services:
 |        Active Users |   TCP/UDP |    11 |  [RFC 866] |    `active` |
 |             Daytime |   TCP/UDP |    13 |  [RFC 867] |   `daytime` |
 | Character Generator |   TCP/UDP |    19 |  [RFC 864] |   `chargen` |
+|                Time |   TCP/UDP |    37 |  [RFC 868] |      `time` |
 
 [RFC 862]: https://datatracker.ietf.org/doc/html/rfc862
 [RFC 863]: https://datatracker.ietf.org/doc/html/rfc863
 [RFC 866]: https://datatracker.ietf.org/doc/html/rfc866
 [RFC 867]: https://datatracker.ietf.org/doc/html/rfc867
 [RFC 864]: https://datatracker.ietf.org/doc/html/rfc864
+[RFC 868]: https://datatracker.ietf.org/doc/html/rfc868
 
 All features are enabled by default.
 

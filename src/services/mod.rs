@@ -21,6 +21,8 @@ mod daytime;
 mod discard;
 #[cfg(feature = "echo")]
 mod echo;
+#[cfg(feature = "time")]
+mod time;
 
 #[derive(Debug, Clone, Copy)]
 pub enum ServiceRet {}
@@ -145,4 +147,5 @@ pub fn spawn_all() {
 	service!(if "daytime" serve daytime(config));
 	service!(if "discard" serve discard(config));
 	service!(if "echo" serve echo(config));
+	service!(if "time" serve time(config));
 }
