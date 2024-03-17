@@ -1,0 +1,42 @@
+[
+	{ "username": "alice-original", "full_name": "Alice Original", "info": "" },
+	{ "username": "bob-generic", "full_name": "Bob Generic", "info": "" },
+	{ "username": "carol-third", "full_name": "Carol Third", "info": "" },
+	{ "username": "dave-fourth", "full_name": "Dave Fourth", "info": "" },
+	{
+		"username": "eve-dropper",
+		"full_name": "Eve Dropper",
+		"info": "Looking at what you're typing.\nLike to listen to ~your private conversations~ music.\nHate cryptography, don't really understand why anybody would want that."
+	},
+	{ "username": "frank-sixth", "full_name": "Frank Sixth", "info": "" },
+	{ "username": "grace-backdoor", "full_name": "Grace Backdoor", "info": "" },
+	{
+		"username": "heidi-enasay",
+		"full_name": "Heidi Enesay",
+		"info": "Works at [REDACTED] as a [REDACTED] [REDACTED].\n<3 Eve Dropper."
+	},
+	{ "username": "ivan-grigg", "full_name": "Ivan Grigg", "info": "" },
+	{ "username": "judy-judge", "full_name": "Judy Judge", "info": "" },
+	{
+		"username": "mallory-van_der_middle",
+		"full_name": "Mallory van der Middle",
+		"info": "I just think fish are really super."
+	},
+	{ "username": "niaj-dropper", "full_name": "Niaj Dropper", "info": "" },
+	{ "username": "olivia-oracle", "full_name": "Olivia Oracle", "info": "" },
+	{ "username": "peggy-prover", "full_name": "Peggy Prover", "info": "" },
+	{
+		"username": "rupert-repudiation",
+		"full_name": "Rupert Repudiation",
+		"info": ""
+	},
+	{
+		"username": "sybil-pseudonym",
+		"full_name": "Sybil Pseudonym",
+		"info": "Also known as Sybil Dorsett, Sock Puppet, Btc Mitm, Kax 17, Astro Turf, Ballot Stuff, among others."
+	},
+	{ "username": "trent-arbitrage", "full_name": "Trent Arbitrage", "info": "" },
+	{ "username": "victor-verify", "full_name": "Victor Verify", "info": "" },
+	{ "username": "wendy-whistle", "full_name": "Wendy Whistle", "info": "" },
+	{ "username": "root", "full_name": "Sys Admin", "info": "" }
+]
