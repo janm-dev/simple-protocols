@@ -95,7 +95,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 	}
 
 	let out_path = PathBuf::from(env::var_os("OUT_DIR").unwrap()).join("usernames.txt");
-	fs::write(out_path, out.as_bytes())?;
+	fs::write(out_path, out.trim().as_bytes())?;
 
 	eprintln!("Added {} usernames", out.lines().count());
 
