@@ -330,11 +330,13 @@ checksum = "248e3bacc7dc6baa3b21e405ee045c3047101a49145e7e9eca583ab4c2ca5345"
 
 [[package]]
 name = "decancer"
-version = "3.0.2"
+version = "3.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0103e221d1e9e9b00b35aee177797a4f92d6aeab5752f256812639136b13557a"
+checksum = "927eb3e21cdf037616ed0316c04eff0fb040d962d24250f91b46a8ec208c8ee1"
 dependencies = [
+ "lazy_static",
  "paste",
+ "regex",
 ]
 
 [[package]]
@@ -654,6 +656,12 @@ checksum = "0de8b303297635ad57c9f5059fd9cee7a47f8e8daa09df0fcd07dd39fb22977f"
 dependencies = [
  "log",
 ]
+
+[[package]]
+name = "lazy_static"
+version = "1.4.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e2abad23fbc42b3700f2f279844dc832adb2b2eb069b2df918f455c4e18cc646"
 
 [[package]]
 name = "libc"
