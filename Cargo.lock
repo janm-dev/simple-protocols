@@ -330,9 +330,9 @@ checksum = "248e3bacc7dc6baa3b21e405ee045c3047101a49145e7e9eca583ab4c2ca5345"
 
 [[package]]
 name = "decancer"
-version = "3.1.0"
+version = "3.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "927eb3e21cdf037616ed0316c04eff0fb040d962d24250f91b46a8ec208c8ee1"
+checksum = "1b6083786d3fc4f0978c6bdd60334338b2b23a512ce897deafa76be8aa917d30"
 dependencies = [
  "lazy_static",
  "paste",
