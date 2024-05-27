@@ -145,7 +145,7 @@ fn get_fs() -> String {
 
 						(!ignorer
 							.matched_path_or_any_parents(
-								&e.path(),
+								e.path(),
 								e.metadata()
 									.expect("can't get directory entry metadata")
 									.is_dir(),
