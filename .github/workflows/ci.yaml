@@ -62,7 +62,7 @@ jobs:
           cargo build
           ./target/debug/simple-protocols --hostname localhost --log debug,simple-protocols=trace &
           cargo test --all-features
-          kill %%
+          kill -s SIGINT %%
 
           cargo llvm-cov report --lcov --output-path lcov.info
       - uses: codecov/codecov-action@v4
