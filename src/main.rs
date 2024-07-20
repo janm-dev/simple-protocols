@@ -2,7 +2,7 @@
 
 use std::{borrow::Cow, env};
 
-use async_std::{channel, future::pending};
+use async_std::{channel, future::pending, task};
 use env_logger::Env;
 use log::{error, info};
 use pico_args::Arguments;
@@ -13,8 +13,7 @@ mod tcp;
 mod udp;
 mod utils;
 
-#[async_std::main]
-async fn main() {
+fn main() {
 	let args = {
 		let mut args = Arguments::from_env();
 
@@ -70,19 +69,22 @@ async fn main() {
 	if let Err(e) = ctrlc::set_handler(move || {
 		if let Err(e) = shutdown_tx.send_blocking(()) {
 			error!("Couldn't handle CTRL-C, the server may not gracefully exit on CTRL-C: {e}");
-		}
+		};
 	}) {
 		error!("Couldn't set CTRL-C handler, the server may not gracefully exit on CTRL-C: {e}");
 	};
 
-	services::spawn_all(args);
-	info!("Simple Protocols Started");
+	task::block_on(async {
+		services::spawn_all(args);
 
-	let Ok(()) = shutdown_rx.recv().await else {
-		error!("Couldn't use CTRL-C handler, the server may not gracefully exit on CTRL-C");
-		pending::<()>().await;
-		return;
-	};
+		info!("Simple Protocols Started");
+
+		let Ok(()) = shutdown_rx.recv().await else {
+			error!("Couldn't use CTRL-C handler, the server may not gracefully exit on CTRL-C");
+			pending::<()>().await;
+			unreachable!()
+		};
+	});
 
 	info!("Simple Protocols Exiting");
 }
