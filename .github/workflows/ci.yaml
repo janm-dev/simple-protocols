@@ -7,7 +7,9 @@ on:
   pull_request:
 
 env:
-  SIMPLE_PROTOCOLS_LOG: debug
+  SIMPLE_PROTOCOLS_LOG: trace
+  SIMPLE_PROTOCOLS_LOG_STYLE: always
+  CARGO_TERM_COLOR: always
   RUST_BACKTRACE: 1
 
 jobs:
