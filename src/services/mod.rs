@@ -50,9 +50,7 @@ pub struct Config {
 }
 
 impl Config {
-	pub fn from_args() -> Result<&'static Self, anyhow::Error> {
-		let mut args = Arguments::from_env();
-
+	pub fn from_args(mut args: Arguments) -> Result<&'static Self, anyhow::Error> {
 		let cfg = Self {
 			hostname: args.opt_value_from_str("--hostname")?,
 		};
@@ -145,8 +143,8 @@ macro_rules! service {
 	};
 }
 
-pub fn spawn_all() {
-	let config = Config::from_args().expect("argument parsing");
+pub fn spawn_all(args: Arguments) {
+	let config = Config::from_args(args).expect("argument parsing");
 
 	service!(if "active" serve active(config));
 	service!(if "chargen" serve chargen(config));
