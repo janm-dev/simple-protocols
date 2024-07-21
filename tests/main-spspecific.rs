@@ -152,7 +152,7 @@ fn env_overrides_arg() {
 		.map(KillOnDrop::new)
 		.unwrap();
 
-	thread::sleep(Duration::from_secs(5));
+	thread::sleep(Duration::from_secs(1));
 	server.kill().unwrap();
 	thread::sleep(Duration::from_secs(1));
 
@@ -173,12 +173,13 @@ fn arg_only() {
 		.stdout(Stdio::piped())
 		.stderr(Stdio::piped())
 		.args(["--log", "debug"])
+		.args(["--log-style", "never"])
 		.args(["--base-port", "13000"])
 		.spawn()
 		.map(KillOnDrop::new)
 		.unwrap();
 
-	thread::sleep(Duration::from_secs(5));
+	thread::sleep(Duration::from_secs(1));
 	server.kill().unwrap();
 	thread::sleep(Duration::from_secs(1));
 
@@ -199,12 +200,13 @@ fn env_only() {
 		.stdout(Stdio::piped())
 		.stderr(Stdio::piped())
 		.envs([("SIMPLE_PROTOCOLS_LOG", "debug")])
+		.envs([("SIMPLE_PROTOCOLS_LOG_STYLE", "never")])
 		.args(["--base-port", "14000"])
 		.spawn()
 		.map(KillOnDrop::new)
 		.unwrap();
 
-	thread::sleep(Duration::from_secs(5));
+	thread::sleep(Duration::from_secs(1));
 	server.kill().unwrap();
 	thread::sleep(Duration::from_secs(1));
 
@@ -215,4 +217,73 @@ fn env_only() {
 
 	assert!(stderr.contains("INFO"));
 	assert!(!stderr.contains("TRACE"));
+}
+
+#[test]
+fn no_logging() {
+	let mut server = Command::new("./target/debug/simple-protocols")
+		.env_remove("SIMPLE_PROTOCOLS_LOG")
+		.env_remove("SIMPLE_PROTOCOLS_LOG_STYLE")
+		.stdout(Stdio::piped())
+		.stderr(Stdio::piped())
+		.args(["--base-port", "15000"])
+		.spawn()
+		.map(KillOnDrop::new)
+		.unwrap();
+
+	thread::sleep(Duration::from_secs(1));
+	server.kill().unwrap();
+	thread::sleep(Duration::from_secs(1));
+
+	let output = server.into_child().wait_with_output().unwrap();
+	let stderr = String::from_utf8_lossy(&output.stderr);
+
+	dbg!(&stderr);
+
+	assert!(stderr.contains("Logging is not configured"));
+	assert!(!stderr.contains("INFO"));
+}
+
+#[test]
+fn invalid_logging() {
+	let os_string_but_not_string = {
+		#[cfg(unix)]
+		{
+			use std::{ffi::OsStr, os::unix::ffi::OsStrExt};
+			OsStr::from_bytes(&[0x55, 0x6e, 0x69, 0x63, 0x6f, 0xdd, 0x65]).to_owned()
+		}
+		#[cfg(windows)]
+		{
+			use std::{ffi::OsString, os::windows::ffi::OsStringExt};
+			OsString::from_wide(&[0x55, 0x6e, 0x69, 0x63, 0x6f, 0xdddd, 0x65])
+		}
+		#[cfg(not(any(windows, unix)))]
+		{
+			return;
+		}
+	};
+
+	let mut server = Command::new("./target/debug/simple-protocols")
+		.env_remove("SIMPLE_PROTOCOLS_LOG")
+		.env_remove("SIMPLE_PROTOCOLS_LOG_STYLE")
+		.stdout(Stdio::piped())
+		.stderr(Stdio::piped())
+		.args(["--base-port", "16000"])
+		.args(["--log".into(), os_string_but_not_string.clone()])
+		.args(["--log-style".into(), os_string_but_not_string])
+		.spawn()
+		.map(KillOnDrop::new)
+		.unwrap();
+
+	thread::sleep(Duration::from_secs(1));
+	server.kill().unwrap();
+	thread::sleep(Duration::from_secs(1));
+
+	let output = server.into_child().wait_with_output().unwrap();
+	let stderr = String::from_utf8_lossy(&output.stderr);
+
+	dbg!(&stderr);
+
+	assert!(stderr.contains("Logging is not configured"));
+	assert!(!stderr.contains("INFO"));
 }
