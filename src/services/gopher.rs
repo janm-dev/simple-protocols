@@ -28,15 +28,25 @@ pub struct Service;
 
 impl SimpleService for Service {
 	fn tcp(config: &'static Config) -> Result<impl Future<Output = ServiceRet>, ServiceErr> {
+		let mapped_port = PORT
+			.checked_add(config.base_port)
+			.ok_or(ServiceErr::PortTooHigh {
+				service_name: "gopher",
+				usual_port: PORT,
+				base_port: config.base_port,
+			})?;
+
 		let hostname = config.hostname.as_ref().ok_or(ServiceErr::MissingConfig {
 			service_name: "gopher",
 			config_name: "hostname",
 		})?;
 
-		Ok(async {
+		info!("starting gopher service on TCP port {mapped_port}");
+
+		Ok(async move {
 			let (sender, receiver) = channel::unbounded();
 
-			TcpListener::spawn(PORT, sender)
+			TcpListener::spawn(mapped_port, sender)
 				.await
 				.expect("error creating listener");
 

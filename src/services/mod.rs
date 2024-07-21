@@ -7,6 +7,7 @@ use std::{
 	task::{Context, Poll},
 };
 
+use log::info;
 use pico_args::Arguments;
 
 // Declare the modules here because rust-analyzer wasn't too happy with
@@ -46,12 +47,14 @@ impl Future for NoFuture {
 
 #[derive(Debug)]
 pub struct Config {
+	pub base_port: u16,
 	pub hostname: Option<String>,
 }
 
 impl Config {
 	pub fn from_args(mut args: Arguments) -> Result<&'static Self, anyhow::Error> {
 		let cfg = Self {
+			base_port: args.opt_value_from_str("--base-port")?.unwrap_or(0),
 			hostname: args.opt_value_from_str("--hostname")?,
 		};
 
@@ -70,6 +73,13 @@ pub enum ServiceErr {
 	/// The service is not available over this protocol and no handler task
 	/// needs to be spawned
 	NoHandler,
+	/// The service usually runs on `usual_port`, and an overflow was
+	/// encountered while adding the `base_port`, and the service can't start
+	PortTooHigh {
+		service_name: &'static str,
+		usual_port: u16,
+		base_port: u16,
+	},
 	/// Service initialization encountered another error
 	Other(anyhow::Error),
 }
@@ -96,6 +106,17 @@ impl Display for ServiceErr {
 				 cases and should never be shown to users, as it should be handled internally - \
 				 if you see this message in your terminal you've found a bug)",
 			),
+			Self::PortTooHigh {
+				service_name,
+				usual_port,
+				base_port,
+			} => f.write_fmt(format_args!(
+				"the {service_name} service usually runs on port {usual_port}, but the base port \
+				 was set to {base_port}, which makes the effective port value overflow (the \
+				 effective port can be at most {}, rerun with a smaller \"--base-port\" value to \
+				 enable this service)",
+				u16::MAX
+			)),
 			Self::Other(e) => e.fmt(f),
 		}
 	}
@@ -145,6 +166,10 @@ macro_rules! service {
 
 pub fn spawn_all(args: Arguments) {
 	let config = Config::from_args(args).expect("argument parsing");
+
+	if config.base_port > 0 {
+		info!("Increasing all port numbers by {}", config.base_port);
+	}
 
 	service!(if "active" serve active(config));
 	service!(if "chargen" serve chargen(config));

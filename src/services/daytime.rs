@@ -23,11 +23,21 @@ pub const PORT: u16 = 13;
 pub struct Service;
 
 impl SimpleService for Service {
-	fn tcp(_: &'static Config) -> Result<impl Future<Output = ServiceRet>, ServiceErr> {
-		Ok(async {
+	fn tcp(config: &'static Config) -> Result<impl Future<Output = ServiceRet>, ServiceErr> {
+		let mapped_port = PORT
+			.checked_add(config.base_port)
+			.ok_or(ServiceErr::PortTooHigh {
+				service_name: "daytime",
+				usual_port: PORT,
+				base_port: config.base_port,
+			})?;
+
+		info!("starting daytime service on TCP port {mapped_port}");
+
+		Ok(async move {
 			let (sender, receiver) = channel::unbounded();
 
-			TcpListener::spawn(PORT, sender)
+			TcpListener::spawn(mapped_port, sender)
 				.await
 				.expect("error creating listener");
 
@@ -42,11 +52,21 @@ impl SimpleService for Service {
 		})
 	}
 
-	fn udp(_: &'static Config) -> Result<impl Future<Output = ServiceRet>, ServiceErr> {
-		Ok(async {
+	fn udp(config: &'static Config) -> Result<impl Future<Output = ServiceRet>, ServiceErr> {
+		let mapped_port = PORT
+			.checked_add(config.base_port)
+			.ok_or(ServiceErr::PortTooHigh {
+				service_name: "daytime",
+				usual_port: PORT,
+				base_port: config.base_port,
+			})?;
+
+		info!("starting daytime service on UDP port {mapped_port}");
+
+		Ok(async move {
 			let (sender, receiver) = channel::unbounded();
 
-			UdpListener::spawn(PORT, sender)
+			UdpListener::spawn(mapped_port, sender)
 				.await
 				.expect("error creating listener");
 

@@ -3,7 +3,6 @@
 use std::net::SocketAddr;
 
 use async_std::{channel, channel::Sender, io::WriteExt, net::TcpStream, task::spawn};
-use const_str::concat_bytes;
 use log::{info, warn};
 use rand::Rng;
 
@@ -22,11 +21,21 @@ const CHARACTERS: &[u8] = br##"!"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQ
 pub struct Service;
 
 impl SimpleService for Service {
-	fn tcp(_: &'static Config) -> Result<impl Future<Output = ServiceRet>, ServiceErr> {
-		Ok(async {
+	fn tcp(config: &'static Config) -> Result<impl Future<Output = ServiceRet>, ServiceErr> {
+		let mapped_port = PORT
+			.checked_add(config.base_port)
+			.ok_or(ServiceErr::PortTooHigh {
+				service_name: "chargen",
+				usual_port: PORT,
+				base_port: config.base_port,
+			})?;
+
+		info!("starting chargen service on TCP port {mapped_port}");
+
+		Ok(async move {
 			let (sender, receiver) = channel::unbounded();
 
-			TcpListener::spawn(PORT, sender)
+			TcpListener::spawn(mapped_port, sender)
 				.await
 				.expect("error creating listener");
 
@@ -41,11 +50,21 @@ impl SimpleService for Service {
 		})
 	}
 
-	fn udp(_: &'static Config) -> Result<impl Future<Output = ServiceRet>, ServiceErr> {
-		Ok(async {
+	fn udp(config: &'static Config) -> Result<impl Future<Output = ServiceRet>, ServiceErr> {
+		let mapped_port = PORT
+			.checked_add(config.base_port)
+			.ok_or(ServiceErr::PortTooHigh {
+				service_name: "chargen",
+				usual_port: PORT,
+				base_port: config.base_port,
+			})?;
+
+		info!("starting chargen service on UDP port {mapped_port}");
+
+		Ok(async move {
 			let (sender, receiver) = channel::unbounded();
 
-			UdpListener::spawn(PORT, sender)
+			UdpListener::spawn(mapped_port, sender)
 				.await
 				.expect("error creating listener");
 
@@ -59,7 +78,7 @@ impl SimpleService for Service {
 }
 
 async fn handle_tcp(mut stream: TcpStream) {
-	const CHARACTERS_2: &[u8] = concat_bytes!(CHARACTERS, CHARACTERS);
+	const CHARACTERS_2: &[u8] = const_str::concat_bytes!(CHARACTERS, CHARACTERS);
 
 	let mut buf = [0; LINE_LEN + LINE_END.len()];
 	buf[LINE_LEN..].copy_from_slice(LINE_END);
