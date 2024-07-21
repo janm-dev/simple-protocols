@@ -1,5 +1,5 @@
 use std::{
-	io::{Read, Write},
+	io::{Error as IoError, Read, Write},
 	net::{Ipv4Addr, SocketAddr, TcpStream},
 	ops::{Deref, DerefMut},
 	process::{Child, Command, Stdio},
@@ -13,6 +13,26 @@ struct KillOnDrop(Option<Child>);
 impl KillOnDrop {
 	fn new(child: Child) -> Self {
 		Self(Some(child))
+	}
+
+	fn kill_gently(&mut self) -> Result<(), IoError> {
+		let child = self.0.as_mut().expect("no child to gently kill");
+
+		#[cfg(unix)]
+		if let Ok(true) = Command::new("kill")
+			.args(["-s", "SIGINT", &child.id().to_string()])
+			.status()
+			.map(|s| s.success())
+		{
+			thread::sleep(Duration::from_secs(1));
+		}
+
+		if child.try_wait()?.is_none() {
+			child.kill()?;
+			thread::sleep(Duration::from_secs(1));
+		}
+
+		Ok(())
 	}
 
 	fn into_child(mut self) -> Child {
@@ -128,9 +148,7 @@ fn non_ctrl_c_exit() {
 
 	thread::sleep(Duration::from_secs(1));
 
-	server.kill().unwrap();
-
-	thread::sleep(Duration::from_secs(1));
+	server.kill_gently().unwrap();
 
 	let output = server.into_child().wait_with_output().unwrap();
 	let stderr = String::from_utf8_lossy(&output.stderr);
@@ -153,8 +171,8 @@ fn env_overrides_arg() {
 		.unwrap();
 
 	thread::sleep(Duration::from_secs(1));
-	server.kill().unwrap();
-	thread::sleep(Duration::from_secs(1));
+
+	server.kill_gently().unwrap();
 
 	let output = server.into_child().wait_with_output().unwrap();
 	let stderr = String::from_utf8_lossy(&output.stderr);
@@ -180,8 +198,8 @@ fn arg_only() {
 		.unwrap();
 
 	thread::sleep(Duration::from_secs(1));
-	server.kill().unwrap();
-	thread::sleep(Duration::from_secs(1));
+
+	server.kill_gently().unwrap();
 
 	let output = server.into_child().wait_with_output().unwrap();
 	let stderr = String::from_utf8_lossy(&output.stderr);
@@ -207,8 +225,8 @@ fn env_only() {
 		.unwrap();
 
 	thread::sleep(Duration::from_secs(1));
-	server.kill().unwrap();
-	thread::sleep(Duration::from_secs(1));
+
+	server.kill_gently().unwrap();
 
 	let output = server.into_child().wait_with_output().unwrap();
 	let stderr = String::from_utf8_lossy(&output.stderr);
@@ -232,8 +250,8 @@ fn no_logging() {
 		.unwrap();
 
 	thread::sleep(Duration::from_secs(1));
-	server.kill().unwrap();
-	thread::sleep(Duration::from_secs(1));
+
+	server.kill_gently().unwrap();
 
 	let output = server.into_child().wait_with_output().unwrap();
 	let stderr = String::from_utf8_lossy(&output.stderr);
@@ -276,8 +294,8 @@ fn invalid_logging() {
 		.unwrap();
 
 	thread::sleep(Duration::from_secs(1));
-	server.kill().unwrap();
-	thread::sleep(Duration::from_secs(1));
+
+	server.kill_gently().unwrap();
 
 	let output = server.into_child().wait_with_output().unwrap();
 	let stderr = String::from_utf8_lossy(&output.stderr);
