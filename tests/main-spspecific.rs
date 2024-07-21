@@ -148,7 +148,9 @@ fn non_ctrl_c_exit() {
 
 	thread::sleep(Duration::from_secs(1));
 
-	server.kill_gently().unwrap();
+	server.kill().unwrap();
+
+	thread::sleep(Duration::from_secs(1));
 
 	let output = server.into_child().wait_with_output().unwrap();
 	let stderr = String::from_utf8_lossy(&output.stderr);
