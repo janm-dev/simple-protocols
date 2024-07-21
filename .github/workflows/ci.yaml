@@ -55,16 +55,10 @@ jobs:
       - uses: taiki-e/install-action@cargo-llvm-cov
       - run: sudo /sbin/iptables -F && printf 'net.ipv4.ip_unprivileged_port_start = 0\nnet.ipv6.ip_unprivileged_port_start = 0\n' | sudo tee /etc/sysctl.d/50-unprivileged-ports.conf && sudo sysctl --system
       - uses: Swatinem/rust-cache@v2
-      - run: |
-          source <(cargo llvm-cov show-env --export-prefix)
-          cargo llvm-cov clean
-
-          cargo build
-          ./target/debug/simple-protocols --hostname localhost --log debug,simple-protocols=trace &
-          cargo test --all-features
-          kill -s SIGINT %%
-
-          cargo llvm-cov report --lcov --output-path lcov.info
+      - run: cargo llvm-cov show-env | tr -d "'" >> "$GITHUB_ENV"
+      - run: cargo build --locked
+      - run: ./target/debug/simple-protocols --hostname localhost --log debug,simple-protocols=trace & sleep 1 && cargo test && sleep 1 && kill -s SIGINT %%
+      - run: cargo llvm-cov report --lcov --output-path lcov.info
       - uses: codecov/codecov-action@v4
         with:
           files: lcov.info
