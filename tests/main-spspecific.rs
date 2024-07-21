@@ -285,5 +285,7 @@ fn invalid_logging() {
 	dbg!(&stderr);
 
 	assert!(stderr.contains("Logging is not configured"));
+	assert!(stderr.contains("`--log`"));
+	assert!(stderr.contains("`--log-style`"));
 	assert!(!stderr.contains("INFO"));
 }
