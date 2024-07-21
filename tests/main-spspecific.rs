@@ -1,5 +1,4 @@
 use std::{
-	env,
 	io::{Read, Write},
 	net::{Ipv4Addr, SocketAddr, TcpStream},
 	ops::{Deref, DerefMut},
@@ -53,8 +52,8 @@ impl Drop for KillOnDrop {
 #[test]
 fn base_port() {
 	let _server = Command::new("./target/debug/simple-protocols")
-		.env_clear()
-		.envs(env::var_os("SystemRoot").map(|val| ("SystemRoot", val)))
+		.env_remove("SIMPLE_PROTOCOLS_LOG")
+		.env_remove("SIMPLE_PROTOCOLS_LOG_STYLE")
 		.stderr(Stdio::piped())
 		.stdout(Stdio::piped())
 		.args(["--log", "debug"])
@@ -92,8 +91,8 @@ fn ctrl_c_exit_unix() {
 	};
 
 	let server = Command::new("./target/debug/simple-protocols")
-		.env_clear()
-		.envs(env::var_os("SystemRoot").map(|val| ("SystemRoot", val)))
+		.env_remove("SIMPLE_PROTOCOLS_LOG")
+		.env_remove("SIMPLE_PROTOCOLS_LOG_STYLE")
 		.stderr(Stdio::piped())
 		.stdout(Stdio::piped())
 		.args(["--log", "debug"])
@@ -117,8 +116,8 @@ fn ctrl_c_exit_unix() {
 #[test]
 fn non_ctrl_c_exit() {
 	let mut server = Command::new("./target/debug/simple-protocols")
-		.env_clear()
-		.envs(env::var_os("SystemRoot").map(|val| ("SystemRoot", val)))
+		.env_remove("SIMPLE_PROTOCOLS_LOG")
+		.env_remove("SIMPLE_PROTOCOLS_LOG_STYLE")
 		.stderr(Stdio::piped())
 		.stdout(Stdio::piped())
 		.args(["--log", "debug"])
@@ -142,8 +141,8 @@ fn non_ctrl_c_exit() {
 #[test]
 fn env_overrides_arg() {
 	let mut server = Command::new("./target/debug/simple-protocols")
-		.env_clear()
-		.envs(env::var_os("SystemRoot").map(|val| ("SystemRoot", val)))
+		.env_remove("SIMPLE_PROTOCOLS_LOG")
+		.env_remove("SIMPLE_PROTOCOLS_LOG_STYLE")
 		.stdout(Stdio::piped())
 		.stderr(Stdio::piped())
 		.envs([("SIMPLE_PROTOCOLS_LOG", "warn")])
@@ -169,8 +168,8 @@ fn env_overrides_arg() {
 #[test]
 fn arg_only() {
 	let mut server = Command::new("./target/debug/simple-protocols")
-		.env_clear()
-		.envs(env::var_os("SystemRoot").map(|val| ("SystemRoot", val)))
+		.env_remove("SIMPLE_PROTOCOLS_LOG")
+		.env_remove("SIMPLE_PROTOCOLS_LOG_STYLE")
 		.stdout(Stdio::piped())
 		.stderr(Stdio::piped())
 		.args(["--log", "debug"])
@@ -195,8 +194,8 @@ fn arg_only() {
 #[test]
 fn env_only() {
 	let mut server = Command::new("./target/debug/simple-protocols")
-		.env_clear()
-		.envs(env::var_os("SystemRoot").map(|val| ("SystemRoot", val)))
+		.env_remove("SIMPLE_PROTOCOLS_LOG")
+		.env_remove("SIMPLE_PROTOCOLS_LOG_STYLE")
 		.stdout(Stdio::piped())
 		.stderr(Stdio::piped())
 		.envs([("SIMPLE_PROTOCOLS_LOG", "debug")])
