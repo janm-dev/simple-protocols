@@ -104,7 +104,7 @@ fn ctrl_c_exit_unix() {
 
 	thread::sleep(Duration::from_secs(1));
 
-	signal::kill(Pid::from_raw(server.id()), Some(Signal::SIGINT)).unwrap();
+	signal::kill(Pid::from_raw(server.id() as _), Some(Signal::SIGINT)).unwrap();
 
 	thread::sleep(Duration::from_secs(1));
 
