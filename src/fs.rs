@@ -110,6 +110,36 @@ mod tests {
 	use super::*;
 
 	#[test]
+	fn fs_error() {
+		assert!(matches!(
+			read(b"./fs.rs"),
+			Err(FsError::NonAbsolutePath(b"./fs.rs"))
+		));
+		assert!(matches!(
+			read(b"/@:%.rs"),
+			Err(FsError::InvalidPath(b"/@:%.rs"))
+		));
+		assert!(matches!(
+			read(b"/src/fs.rs\0"),
+			Err(FsError::InvalidPath(b"/src/fs.rs\0"))
+		));
+		assert!(matches!(
+			read(b"/src/sf.rs"),
+			Err(FsError::NotFound(b"/src/sf.rs"))
+		));
+
+		assert!(format!("{}", read(b"./fs.rs").unwrap_err()).contains("./fs.rs"));
+		assert!(format!("{}", read(b"/@:%.rs").unwrap_err()).contains("/@:%.rs"));
+		assert!(format!("{}", read(b"/src/fs.rs\0").unwrap_err()).contains("/src/fs.rs\0"));
+		assert!(format!("{}", read(b"/src/sf.rs").unwrap_err()).contains("/src/sf.rs"));
+
+		assert!(format!("{}", read(b"./fs.rs").unwrap_err()).contains("absolute"));
+		assert!(format!("{}", read(b"/@:%.rs").unwrap_err()).contains("name"));
+		assert!(format!("{}", read(b"/src/fs.rs\0").unwrap_err()).contains("name"));
+		assert!(format!("{}", read(b"/src/sf.rs").unwrap_err()).contains("not found"));
+	}
+
+	#[test]
 	fn read_this() {
 		let file = read(b"/src/fs.rs").unwrap();
 		assert!(file.is_file());
