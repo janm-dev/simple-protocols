@@ -309,3 +309,31 @@ fn invalid_logging() {
 	assert!(stderr.contains("`--log-style`"));
 	assert!(!stderr.contains("INFO"));
 }
+
+#[test]
+fn port_overflow() {
+	let mut server = Command::new("./target/debug/simple-protocols")
+		.env_remove("SIMPLE_PROTOCOLS_LOG")
+		.env_remove("SIMPLE_PROTOCOLS_LOG_STYLE")
+		.stdout(Stdio::piped())
+		.stderr(Stdio::piped())
+		.args(["--base-port", "65520"])
+		.args(["--log", "info"])
+		.spawn()
+		.map(KillOnDrop::new)
+		.unwrap();
+
+	thread::sleep(Duration::from_secs(1));
+
+	server.kill_gently().unwrap();
+
+	let output = server.into_child().wait_with_output().unwrap();
+	let stderr = String::from_utf8_lossy(&output.stderr);
+
+	dbg!(&stderr);
+
+	assert!(stderr.contains("\"--base-port\""));
+	assert!(stderr.contains("starting daytime service on TCP port 65533"));
+	assert!(stderr.contains("overflow"));
+	assert!(!stderr.contains("starting gopher service"));
+}

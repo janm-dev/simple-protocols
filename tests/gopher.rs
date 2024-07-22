@@ -1,6 +1,6 @@
 use std::{
-	io::{Read, Write},
-	net::{IpAddr, Ipv4Addr, Ipv6Addr, SocketAddr, TcpStream},
+	io::{ErrorKind, Read, Write},
+	net::{IpAddr, Ipv4Addr, Ipv6Addr, SocketAddr, TcpStream, UdpSocket},
 	str, thread,
 	time::Duration,
 };
@@ -10,6 +10,9 @@ fn main() {
 	thread::scope(|s| {
 		s.spawn(|| tcp(IpAddr::V4(Ipv4Addr::LOCALHOST)));
 		s.spawn(|| tcp(IpAddr::V6(Ipv6Addr::LOCALHOST)));
+
+		s.spawn(|| udp(IpAddr::V4(Ipv4Addr::LOCALHOST)));
+		s.spawn(|| udp(IpAddr::V6(Ipv6Addr::LOCALHOST)));
 	});
 }
 
@@ -98,4 +101,25 @@ fn tcp(ip: IpAddr) {
 		assert!(!port.is_empty());
 		assert!(port.chars().all(|c| c.is_ascii_digit()));
 	}
+}
+
+/// Gopher does not use UDP
+fn udp(ip: IpAddr) {
+	let udp = UdpSocket::bind(if ip.is_ipv4() {
+		SocketAddr::new(Ipv4Addr::UNSPECIFIED.into(), 0)
+	} else {
+		SocketAddr::new(Ipv6Addr::UNSPECIFIED.into(), 0)
+	})
+	.unwrap();
+
+	udp.set_read_timeout(Some(Duration::from_secs(1))).unwrap();
+	let mut buf = vec![0; 1024];
+
+	udp.connect(SocketAddr::new(ip, 70)).unwrap();
+
+	udp.send(b"\r\n").unwrap();
+
+	assert!(
+		matches!(udp.recv(&mut buf), Err(e) if e.kind() == ErrorKind::WouldBlock || e.kind() == ErrorKind::TimedOut)
+	);
 }
