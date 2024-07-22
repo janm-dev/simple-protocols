@@ -88,7 +88,7 @@ impl SimpleService for Service {
 	}
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 enum Message<'a> {
 	#[cfg(feature = "message-1")]
 	A {

@@ -88,3 +88,76 @@ pub fn parse(message: &[u8]) -> Result<Message, &'static str> {
 		signature,
 	})
 }
+
+#[cfg(test)]
+mod tests {
+	use super::*;
+	use crate::utils::FmtAsciiIsh;
+
+	#[test]
+	fn parse() {
+		const TEST_CASES: &[(&[u8], Result<Message, &str>)] = &[
+			(
+				b"chris\0\0Hi\r\nHow about lunch?\0sandy\0console\0910806121325\0\0",
+				Ok(Message::B {
+					recipient: Cow::Borrowed("chris"),
+					recip_term: Cow::Borrowed(""),
+					message: Cow::Borrowed("Hi\r\nHow about lunch?"),
+					sender: Cow::Borrowed("sandy"),
+					sender_term: Cow::Borrowed("console"),
+					cookie: Cow::Borrowed("910806121325"),
+					signature: Cow::Borrowed(""),
+				}),
+			),
+			(
+				b"chris\0\0Hi\r\nHow about lunch?\0sandy\0console\0910806121325\0",
+				Err("null"),
+			),
+			(b"chris\0\0Hi\r\nHow about lunch?\0", Err("missing sender")),
+			(
+				b"\0\0\0\0\0\0\0",
+				Ok(Message::B {
+					recipient: Cow::Borrowed(""),
+					recip_term: Cow::Borrowed(""),
+					message: Cow::Borrowed(""),
+					sender: Cow::Borrowed(""),
+					sender_term: Cow::Borrowed(""),
+					cookie: Cow::Borrowed(""),
+					signature: Cow::Borrowed(""),
+				}),
+			),
+			(
+				b"\x12\0\x34\0\x56\0\x78\0\x89\0\xab\0\xcd\0",
+				Err("error decoding"),
+			),
+			(
+				b"chris\0\0Hi\r\nHow about lunch?\0sandy\0console\0910806121325\0\0chris\0\0Hi\r\nHow about lunch?\0sandy\0console\0910806121325\0\0",
+				Err("extra data"),
+			),
+		];
+
+		for (msg, res) in TEST_CASES.iter().cloned() {
+			match (super::parse(msg), res) {
+				(Ok(parsed), Ok(res)) => assert_eq!(
+					parsed,
+					res,
+					"message parsed incorrectly: parsed {:?} as {parsed:?}, but expected {res:?}",
+					FmtAsciiIsh(msg),
+				),
+				(Err(err), Err(res)) => assert!(
+					err.contains(res),
+					"message parsing failed incorrectly: got error {err:?}, but expected error \
+					 containing {res:?}",
+				),
+				(Ok(parsed), Err(res)) => panic!(
+					"message parsing succeeded unexpectedly: parsed {:?} as {parsed:?}, but \
+					 expected error containing {res}",
+					FmtAsciiIsh(msg)
+				),
+				(Err(err), Ok(res)) => {
+					panic!("message parsing failed unexpectedly: expected {res:?}, but got {err:?}",)
+				}
+			}
+		}
+	}
+}
