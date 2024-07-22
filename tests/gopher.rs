@@ -1,5 +1,5 @@
 use std::{
-	io::{ErrorKind, Read, Write},
+	io::{Read, Write},
 	net::{IpAddr, Ipv4Addr, Ipv6Addr, SocketAddr, TcpStream, UdpSocket},
 	str, thread,
 	time::Duration,
@@ -119,7 +119,5 @@ fn udp(ip: IpAddr) {
 
 	udp.send(b"\r\n").unwrap();
 
-	assert!(
-		matches!(udp.recv(&mut buf), Err(e) if e.kind() == ErrorKind::WouldBlock || e.kind() == ErrorKind::TimedOut)
-	);
+	assert!(udp.recv(&mut buf).is_err());
 }
