@@ -34,7 +34,7 @@ gopher = []
 
 [dependencies]
 anyhow = "1.0.87"
-async-std = { version = "1.12.0", features = [
+async-std = { version = "1.13.0", features = [
 	"attributes",
 ] }
 const-str = "0.5.7"
