@@ -116,7 +116,7 @@ struct Item<'a> {
 	pub port: u16,
 }
 
-impl<'a> Display for Item<'a> {
+impl Display for Item<'_> {
 	fn fmt(&self, f: &mut Formatter) -> FmtResult {
 		write!(
 			f,
