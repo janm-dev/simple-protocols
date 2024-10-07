@@ -231,10 +231,7 @@ mod tests {
 			format!("a {} c", FmtMaybeUtf8(b"\xaa \n \r \t \\ \x00 \0 \' ' \"")),
 			r#"a \xaa \n \r \t \\ \0 \0 ' ' \" c"#
 		);
-		assert_eq!(
-			format!("a {} c", FmtMaybeUtf8("🏳️‍🌈".as_bytes())),
-			"a 🏳️‍🌈 c"
-		);
+		assert_eq!(format!("a {} c", FmtMaybeUtf8("🏳️‍🌈".as_bytes())), "a 🏳️‍🌈 c");
 		assert_eq!(
 			format!(
 				"a {} c",

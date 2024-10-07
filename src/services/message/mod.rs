@@ -108,7 +108,7 @@ enum Message<'a> {
 	},
 }
 
-impl<'a> Display for Message<'a> {
+impl Display for Message<'_> {
 	fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
 		match self {
 			#[cfg(feature = "message-1")]
