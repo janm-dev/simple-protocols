@@ -33,7 +33,7 @@ time = []
 gopher = []
 
 [dependencies]
-anyhow = "1.0.92"
+anyhow = "1.0.93"
 async-std = { version = "1.13.0", features = [
 	"attributes",
 ] }
