@@ -33,7 +33,7 @@ time = []
 gopher = []
 
 [dependencies]
-anyhow = "1.0.93"
+anyhow = "1.0.94"
 async-std = { version = "1.13.0", features = [
 	"attributes",
 ] }
@@ -50,7 +50,7 @@ pico-args = { version = "0.5.0", features = [
 ] }
 rand = "0.8.5"
 socket2 = "0.5.8"
-time = { version = "0.3.36", features = ["formatting"] }
+time = { version = "0.3.37", features = ["formatting"] }
 
 [build-dependencies]
 decancer = "3.2.8"
@@ -59,7 +59,7 @@ serde = { version = "1.0.215", features = ["derive"] }
 serde_json = "1.0.133"
 
 [dev-dependencies]
-time = { version = "0.3.36", features = ["parsing"] }
+time = { version = "0.3.37", features = ["parsing"] }
 
 [target.'cfg(unix)'.dev-dependencies]
 nix = { version = "0.29.0", features = ["signal"] }
