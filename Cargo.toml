@@ -33,13 +33,13 @@ time = []
 gopher = []
 
 [dependencies]
-anyhow = "1.0.94"
+anyhow = "1.0.95"
 async-std = { version = "1.13.0", features = [
 	"attributes",
 ] }
 const-str = "0.5.7"
 ctrlc = "3.4.5"
-env_logger = "0.11.5"
+env_logger = "0.11.6"
 futures = { version = "0.3.31", default-features = false, features = [
 	"std",
 	"async-await",
@@ -56,7 +56,7 @@ time = { version = "0.3.37", features = ["formatting"] }
 decancer = "3.2.8"
 ignore = "0.4.23"
 serde = { version = "1.0.216", features = ["derive"] }
-serde_json = "1.0.133"
+serde_json = "1.0.134"
 
 [dev-dependencies]
 time = { version = "0.3.37", features = ["parsing"] }
