@@ -109,7 +109,7 @@ async fn handle_udp((_, _, reply): (Vec<u8>, SocketAddr, Sender<Vec<u8>>)) {
 		'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghij\
 	";
 
-	let len = rand::thread_rng().gen_range(1..512);
+	let len = rand::rng().random_range(1..512);
 	if reply.send(CHARACTERS_512[..len].to_vec()).await.is_err() {
 		warn!("UDP channel closed");
 	};

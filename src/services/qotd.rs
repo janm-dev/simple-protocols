@@ -10,7 +10,7 @@ use async_std::{
 };
 use const_str::split;
 use log::{info, warn};
-use rand::seq::SliceRandom;
+use rand::seq::IndexedRandom;
 
 use crate::{
 	services::{Config, Future, ServiceErr, ServiceRet, SimpleService},
@@ -87,7 +87,7 @@ impl SimpleService for Service {
 async fn handle_tcp(mut stream: TcpStream) {
 	let mut buf = [0; 512];
 	let quote = QUOTES
-		.choose(&mut rand::thread_rng())
+		.choose(&mut rand::rng())
 		.expect("there are not quotes")
 		.as_bytes();
 	buf[..quote.len()].copy_from_slice(quote);
@@ -109,7 +109,7 @@ async fn handle_tcp(mut stream: TcpStream) {
 async fn handle_udp((_, _, reply): (Vec<u8>, SocketAddr, Sender<Vec<u8>>)) {
 	let mut buf = [0; 512];
 	let quote = QUOTES
-		.choose(&mut rand::thread_rng())
+		.choose(&mut rand::rng())
 		.expect("there are not quotes")
 		.as_bytes();
 	buf[..quote.len()].copy_from_slice(quote);
