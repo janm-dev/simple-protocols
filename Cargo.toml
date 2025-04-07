@@ -38,7 +38,7 @@ async-std = { version = "1.13.1", features = [
 	"attributes",
 ] }
 const-str = "0.6.2"
-ctrlc = "3.4.5"
+ctrlc = "3.4.6"
 env_logger = "0.11.6"
 futures = { version = "0.3.31", default-features = false, features = [
 	"std",
