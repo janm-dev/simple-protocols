@@ -4,7 +4,7 @@ use std::net::SocketAddr;
 
 use const_str::split;
 use log::{info, warn};
-use rand::{seq::IndexedRandom, Rng};
+use rand::{Rng, seq::IndexedRandom};
 use smol::{
 	channel::{self, Sender},
 	io::AsyncWriteExt,

@@ -2,11 +2,11 @@
 name = "simple-protocols"
 version = "0.1.0"
 license = "MIT OR Apache-2.0"
-edition = "2021"
+edition = "2024"
 description = "Implementations of several simple network protocols"
 keywords = ["Echo", "Discard", "Daytime", "CHARGEN", "Time"]
 repository = "https://github.com/janm-dev/simple-protocols"
-rust-version = "1.76.0"
+rust-version = "1.85.0"
 
 [features]
 default = [

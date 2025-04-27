@@ -35,9 +35,11 @@ fn tcp(ip: IpAddr) {
 	// "It is recommended that it be limited to the ASCII printing characters,
 	// space, carriage return, and line feed. Each user should be listed on a
 	// separate line."
-	assert!(&buf[..n]
-		.iter()
-		.all(|c| c.is_ascii_graphic() || b" \r\n".contains(c)));
+	assert!(
+		&buf[..n]
+			.iter()
+			.all(|c| c.is_ascii_graphic() || b" \r\n".contains(c))
+	);
 }
 
 /// ["UDP Based Active Users Service"](https://datatracker.ietf.org/doc/html/rfc866)
@@ -88,7 +90,9 @@ fn udp(ip: IpAddr) {
 	// "It is recommended that it be limited to the ASCII printing characters,
 	// space, carriage return, and line feed. Each user should be listed on a
 	// separate line."
-	assert!(buf[..n]
-		.iter()
-		.all(|c| c.is_ascii_graphic() || b" \r\n".contains(c)));
+	assert!(
+		buf[..n]
+			.iter()
+			.all(|c| c.is_ascii_graphic() || b" \r\n".contains(c))
+	);
 }

@@ -8,9 +8,10 @@ use std::{
 use anyhow::Error;
 use log::{debug, warn};
 use smol::{
+	Async,
 	channel::Sender,
 	net::{TcpListener, TcpStream},
-	spawn, Async,
+	spawn,
 };
 use socket2::{Domain, Protocol, SockAddr, Socket, Type};
 

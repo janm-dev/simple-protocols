@@ -59,9 +59,11 @@ fn tcp(ip: IpAddr) {
 
 	// "It is recommended that it be limited to the ASCII printing characters,
 	// space, carriage return, and line feed."
-	assert!(buf[..n]
-		.iter()
-		.all(|c| c.is_ascii_graphic() || b" \r\n".contains(c)));
+	assert!(
+		buf[..n]
+			.iter()
+			.all(|c| c.is_ascii_graphic() || b" \r\n".contains(c))
+	);
 
 	// "The daytime should be just one line."
 	assert!(!buf.contains(&b'\n'));
@@ -92,9 +94,11 @@ fn udp(ip: IpAddr) {
 	// ... "containing the current date and time as a ASCII character string" ...
 	// "It is recommended that it be limited to the ASCII printing characters,
 	// space, carriage return, and line feed."
-	assert!(buf[..n]
-		.iter()
-		.all(|c| c.is_ascii_graphic() || b" \r\n".contains(c)));
+	assert!(
+		buf[..n]
+			.iter()
+			.all(|c| c.is_ascii_graphic() || b" \r\n".contains(c))
+	);
 
 	// "There is no specific syntax for the daytime."
 	assert_is_datetime_like(&buf[..n], now);

@@ -9,7 +9,7 @@ use smol::{
 	net::TcpStream,
 	spawn,
 };
-use time::{format_description::well_known::Rfc3339, OffsetDateTime};
+use time::{OffsetDateTime, format_description::well_known::Rfc3339};
 
 use crate::{
 	services::{Config, Future, ServiceErr, ServiceRet, SimpleService},

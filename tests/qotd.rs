@@ -53,9 +53,11 @@ fn tcp(ip: IpAddr) {
 
 	// "It is recommended that it be limited to the ASCII printing characters,
 	// space, carriage return, and line feed."
-	assert!(buf[..n]
-		.iter()
-		.all(|c| c.is_ascii_graphic() || b" \r\n".contains(c)));
+	assert!(
+		buf[..n]
+			.iter()
+			.all(|c| c.is_ascii_graphic() || b" \r\n".contains(c))
+	);
 
 	// "The quote may be just one or up to several lines, but it should be less than
 	// 512 characters."
@@ -86,9 +88,11 @@ fn udp(ip: IpAddr) {
 	// ... "containing a quote" ...
 	// "It is recommended that it be limited to the ASCII printing characters,
 	// space, carriage return, and line feed."
-	assert!(buf[..n]
-		.iter()
-		.all(|c| c.is_ascii_graphic() || b" \r\n".contains(c)));
+	assert!(
+		buf[..n]
+			.iter()
+			.all(|c| c.is_ascii_graphic() || b" \r\n".contains(c))
+	);
 
 	// "The quote may be just one or up to several lines, but it should be less than
 	// 512 characters."
