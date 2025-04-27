@@ -6,14 +6,14 @@ use std::{
 	io::Write,
 };
 
-use async_std::{
-	channel::{self},
-	io::WriteExt,
-	net::TcpStream,
-	task::spawn,
-};
 use futures::AsyncReadExt;
 use log::{debug, info, warn};
+use smol::{
+	channel::{self},
+	io::AsyncWriteExt,
+	net::TcpStream,
+	spawn,
+};
 
 use crate::{
 	fs::{self, Entry},
@@ -56,7 +56,7 @@ impl SimpleService for Service {
 					"New Gopher connection from {}",
 					FmtMaybeAddr(&incoming.peer_addr())
 				);
-				spawn(handle(incoming, hostname));
+				spawn(handle(incoming, hostname)).detach();
 			}
 		})
 	}

@@ -34,9 +34,6 @@ gopher = []
 
 [dependencies]
 anyhow = "1.0.98"
-async-std = { version = "1.13.1", features = [
-	"attributes",
-] }
 const-str = "0.6.2"
 ctrlc = "3.4.6"
 env_logger = "0.11.6"
@@ -49,6 +46,7 @@ pico-args = { version = "0.5.0", features = [
 	"eq-separator",
 ] }
 rand = "0.9.1"
+smol = "2.0.2"
 socket2 = "0.5.9"
 time = { version = "0.3.41", features = ["formatting"] }
 

@@ -143,7 +143,7 @@ macro_rules! service {
 
 			match tcp {
 				Ok(service) => {
-					::async_std::task::spawn(service);
+					::smol::spawn(service).detach();
 				}
 				Err(ServiceErr::NoHandler) => (),
 				Err(e) => {
@@ -153,7 +153,7 @@ macro_rules! service {
 
 			match udp {
 				Ok(service) => {
-					::async_std::task::spawn(service);
+					::smol::spawn(service).detach();
 				}
 				Err(ServiceErr::NoHandler) => (),
 				Err(e) => {

@@ -6,12 +6,12 @@ use std::{
 };
 
 use anyhow::Error;
-use async_std::{
+use log::{debug, trace, warn};
+use smol::{
 	channel::{self, Sender},
 	net::UdpSocket,
-	task::spawn,
+	spawn, Async,
 };
-use log::{debug, trace, warn};
 use socket2::{Domain, Protocol, SockAddr, Socket, Type};
 
 use crate::utils::FmtAsciiIsh;
@@ -35,7 +35,7 @@ impl Listener {
 			port,
 		)))?;
 
-		let listener = UdpSocket::from(StdSocket::from(socket));
+		let listener = UdpSocket::from(Async::new_nonblocking(StdSocket::from(socket))?);
 		let listener_v4 = Self {
 			socket: listener,
 			channel: channel.clone(),
@@ -51,14 +51,14 @@ impl Listener {
 			0,
 		)))?;
 
-		let listener = UdpSocket::from(StdSocket::from(socket));
+		let listener = UdpSocket::from(Async::new_nonblocking(StdSocket::from(socket))?);
 		let listener_v6 = Self {
 			socket: listener,
 			channel,
 		};
 
-		spawn(Arc::new(listener_v4).listen());
-		spawn(Arc::new(listener_v6).listen());
+		spawn(Arc::new(listener_v4).listen()).detach();
+		spawn(Arc::new(listener_v6).listen()).detach();
 
 		Ok(())
 	}
@@ -105,7 +105,8 @@ impl Listener {
 						break;
 					}
 				}
-			});
+			})
+			.detach();
 		}
 	}
 }

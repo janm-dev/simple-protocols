@@ -2,10 +2,10 @@
 
 use std::{borrow::Cow, env};
 
-use async_std::{channel, future::pending, task};
 use env_logger::Env;
 use log::{error, info};
 use pico_args::Arguments;
+use smol::{channel, future::pending};
 
 mod fs;
 mod services;
@@ -74,7 +74,7 @@ fn main() {
 		error!("Couldn't set CTRL-C handler, the server may not gracefully exit on CTRL-C: {e}");
 	};
 
-	task::block_on(async {
+	smol::block_on(async {
 		services::spawn_all(args);
 
 		info!("Simple Protocols Started");

@@ -6,12 +6,12 @@ use std::{
 };
 
 use anyhow::Error;
-use async_std::{
+use log::{debug, warn};
+use smol::{
 	channel::Sender,
 	net::{TcpListener, TcpStream},
-	task::spawn,
+	spawn, Async,
 };
-use log::{debug, warn};
 use socket2::{Domain, Protocol, SockAddr, Socket, Type};
 
 const TCP_BACKLOG: c_int = 1024;
@@ -32,7 +32,7 @@ impl Listener {
 		)))?;
 		socket.listen(TCP_BACKLOG)?;
 
-		let listener = TcpListener::from(StdListener::from(socket));
+		let listener = TcpListener::from(Async::new_nonblocking(StdListener::from(socket))?);
 		let listener_v4 = Self {
 			listener,
 			channel: channel.clone(),
@@ -50,11 +50,11 @@ impl Listener {
 		)))?;
 		socket.listen(TCP_BACKLOG)?;
 
-		let listener = TcpListener::from(StdListener::from(socket));
+		let listener = TcpListener::from(Async::new_nonblocking(StdListener::from(socket))?);
 		let listener_v6 = Self { listener, channel };
 
-		spawn(listener_v4.listen());
-		spawn(listener_v6.listen());
+		spawn(listener_v4.listen()).detach();
+		spawn(listener_v6.listen()).detach();
 
 		Ok(())
 	}

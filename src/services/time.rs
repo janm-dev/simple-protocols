@@ -2,13 +2,13 @@
 
 use std::net::SocketAddr;
 
-use async_std::{
-	channel::{self, Sender},
-	io::WriteExt,
-	net::TcpStream,
-	task::spawn,
-};
 use log::{info, warn};
+use smol::{
+	channel::{self, Sender},
+	io::AsyncWriteExt,
+	net::TcpStream,
+	spawn,
+};
 use time::OffsetDateTime;
 
 use crate::{
@@ -47,7 +47,7 @@ impl SimpleService for Service {
 					"New time connection from {}",
 					FmtMaybeAddr(&incoming.peer_addr())
 				);
-				spawn(handle_tcp(incoming));
+				spawn(handle_tcp(incoming)).detach();
 			}
 		})
 	}
@@ -73,7 +73,7 @@ impl SimpleService for Service {
 			loop {
 				let incoming = receiver.recv().await.expect("UDP channel closed");
 				info!("New time datagram from {}", incoming.1);
-				spawn(handle_udp(incoming));
+				spawn(handle_udp(incoming)).detach();
 			}
 		})
 	}

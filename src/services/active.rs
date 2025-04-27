@@ -2,15 +2,15 @@
 
 use std::net::SocketAddr;
 
-use async_std::{
-	channel::{self, Sender},
-	io::WriteExt,
-	net::TcpStream,
-	task::spawn,
-};
 use const_str::split;
 use log::{info, warn};
 use rand::{seq::IndexedRandom, Rng};
+use smol::{
+	channel::{self, Sender},
+	io::AsyncWriteExt,
+	net::TcpStream,
+	spawn,
+};
 
 use crate::{
 	services::{Config, Future, ServiceErr, ServiceRet, SimpleService},
@@ -55,7 +55,7 @@ impl SimpleService for Service {
 					"New active users connection from {}",
 					FmtMaybeAddr(&incoming.peer_addr())
 				);
-				spawn(handle_tcp(incoming));
+				spawn(handle_tcp(incoming)).detach();
 			}
 		})
 	}
@@ -82,7 +82,7 @@ impl SimpleService for Service {
 				let incoming: (Vec<u8>, SocketAddr, Sender<Vec<u8>>) =
 					receiver.recv().await.expect("UDP channel closed");
 				info!("New active users datagram from {}", incoming.1);
-				spawn(handle_udp(incoming));
+				spawn(handle_udp(incoming)).detach();
 			}
 		})
 	}

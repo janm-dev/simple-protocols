@@ -11,14 +11,14 @@ use std::{
 	net::SocketAddr,
 };
 
-use async_std::{
-	channel::{self, Sender},
-	io::WriteExt,
-	net::TcpStream,
-	task::spawn,
-};
 use futures::AsyncReadExt;
 use log::{info, warn};
+use smol::{
+	channel::{self, Sender},
+	io::AsyncWriteExt,
+	net::TcpStream,
+	spawn,
+};
 
 use crate::{
 	services::{Config, Future, ServiceErr, ServiceRet, SimpleService},
@@ -56,7 +56,7 @@ impl SimpleService for Service {
 					"New Message Send connection from {}",
 					FmtMaybeAddr(&incoming.peer_addr())
 				);
-				spawn(handle_tcp(incoming));
+				spawn(handle_tcp(incoming)).detach();
 			}
 		})
 	}
@@ -82,7 +82,7 @@ impl SimpleService for Service {
 			loop {
 				let incoming = receiver.recv().await.expect("UDP channel closed");
 				info!("New Message Send datagram from {}", incoming.1);
-				spawn(handle_udp(incoming));
+				spawn(handle_udp(incoming)).detach();
 			}
 		})
 	}
