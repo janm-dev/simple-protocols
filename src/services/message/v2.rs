@@ -5,14 +5,14 @@ use std::borrow::Cow;
 use super::Message;
 use crate::utils::decode_iso_8859_1;
 
-pub fn handle_tcp(data: &[u8]) -> (Result<Message, &'static str>, Option<Cow<'_, [u8]>>) {
+pub fn handle_tcp(data: &[u8]) -> (Result<Message<'_>, &'static str>, Option<Cow<'_, [u8]>>) {
 	match parse(&data[1..]) {
 		Ok(msg) => (Ok(msg), Some(Cow::Borrowed(b"+\0"))),
 		Err(err) => (Err(err), Some(Cow::Owned(format!("-{err}\0").into_bytes()))),
 	}
 }
 
-pub fn handle_udp(data: &[u8]) -> (Result<Message, &'static str>, Option<Cow<'_, [u8]>>) {
+pub fn handle_udp(data: &[u8]) -> (Result<Message<'_>, &'static str>, Option<Cow<'_, [u8]>>) {
 	match parse(&data[1..]) {
 		Ok(msg) => {
 			let reply = if matches!(&msg, Message::B { recipient, .. } if !recipient.is_empty()) {
@@ -27,7 +27,7 @@ pub fn handle_udp(data: &[u8]) -> (Result<Message, &'static str>, Option<Cow<'_,
 	}
 }
 
-pub fn parse(message: &[u8]) -> Result<Message, &'static str> {
+pub fn parse(message: &[u8]) -> Result<Message<'_>, &'static str> {
 	let mut parts = message.split(|&b| b == b'\0');
 
 	let recipient = match parts.next().map(decode_iso_8859_1) {

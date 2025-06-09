@@ -4,21 +4,21 @@ use std::borrow::Cow;
 
 use super::Message;
 
-pub fn handle_tcp(data: &[u8]) -> (Result<Message, &'static str>, Option<Cow<'_, [u8]>>) {
+pub fn handle_tcp(data: &[u8]) -> (Result<Message<'_>, &'static str>, Option<Cow<'_, [u8]>>) {
 	match parse(&data[1..]) {
 		Ok(msg) => (Ok(msg), None),
 		Err(err) => (Err(err), None),
 	}
 }
 
-pub fn handle_udp(data: &[u8]) -> (Result<Message, &'static str>, Option<Cow<'_, [u8]>>) {
+pub fn handle_udp(data: &[u8]) -> (Result<Message<'_>, &'static str>, Option<Cow<'_, [u8]>>) {
 	match parse(&data[1..]) {
 		Ok(msg) => (Ok(msg), Some(Cow::Borrowed(data))),
 		Err(err) => (Err(err), None),
 	}
 }
 
-pub fn parse(message: &[u8]) -> Result<Message, &'static str> {
+pub fn parse(message: &[u8]) -> Result<Message<'_>, &'static str> {
 	if message.is_empty() {
 		Err("message is empty")?;
 	}
