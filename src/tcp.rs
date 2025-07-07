@@ -25,7 +25,7 @@ pub struct Listener {
 impl Listener {
 	pub async fn spawn(port: u16, channel: Sender<TcpStream>) -> Result<(), Error> {
 		let socket = Socket::new(Domain::IPV4, Type::STREAM, Some(Protocol::TCP))?;
-		socket.set_nodelay(true)?;
+		socket.set_tcp_nodelay(true)?;
 		socket.set_nonblocking(true)?;
 		socket.bind(&SockAddr::from(SocketAddrV4::new(
 			Ipv4Addr::UNSPECIFIED,
@@ -40,7 +40,7 @@ impl Listener {
 		};
 
 		let socket = Socket::new(Domain::IPV6, Type::STREAM, Some(Protocol::TCP))?;
-		socket.set_nodelay(true)?;
+		socket.set_tcp_nodelay(true)?;
 		socket.set_nonblocking(true)?;
 		socket.set_only_v6(true)?;
 		socket.bind(&SockAddr::from(SocketAddrV6::new(
