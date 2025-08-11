@@ -2,7 +2,7 @@
 
 use std::net::SocketAddr;
 
-use const_str::split;
+use const_format::str_split;
 use log::{info, warn};
 use rand::{Rng, seq::IndexedRandom};
 use smol::{
@@ -21,8 +21,7 @@ use crate::{
 
 pub const PORT: u16 = 11;
 
-#[allow(long_running_const_eval)]
-const USERNAMES: &[&str] = &split!(
+const USERNAMES: &[&str] = &str_split!(
 	include_str!(concat!(env!("OUT_DIR"), "/usernames.txt")),
 	"\n"
 );

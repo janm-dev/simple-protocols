@@ -16,7 +16,7 @@ use crate::{
 pub const PORT: u16 = 19;
 const LINE_LEN: usize = 72;
 const LINE_END: &[u8] = b"\r\n";
-const CHARACTERS: &[u8] = br##"!"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~ "##;
+const CHARACTERS: &str = r##"!"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~ "##;
 
 pub struct Service;
 
@@ -78,7 +78,7 @@ impl SimpleService for Service {
 }
 
 async fn handle_tcp(mut stream: TcpStream) {
-	const CHARACTERS_2: &[u8] = const_str::concat_bytes!(CHARACTERS, CHARACTERS);
+	const CHARACTERS_2: &[u8] = const_format::concatcp!(CHARACTERS, CHARACTERS).as_bytes();
 
 	let mut buf = [0; LINE_LEN + LINE_END.len()];
 	buf[LINE_LEN..].copy_from_slice(LINE_END);

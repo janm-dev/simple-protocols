@@ -2,7 +2,7 @@
 
 use std::net::SocketAddr;
 
-use const_str::split;
+use const_format::str_split;
 use log::{info, warn};
 use rand::seq::IndexedRandom;
 use smol::{
@@ -21,8 +21,7 @@ use crate::{
 
 pub const PORT: u16 = 17;
 
-#[allow(long_running_const_eval)]
-const QUOTES: &[&str] = &split!(include_str!(concat!(env!("OUT_DIR"), "/quotes.txt")), "\n");
+const QUOTES: &[&str] = &str_split!(include_str!(concat!(env!("OUT_DIR"), "/quotes.txt")), "\n");
 const QUOTE_END: &[u8] = b"\r\n";
 
 pub struct Service;
