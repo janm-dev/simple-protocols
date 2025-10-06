@@ -34,7 +34,7 @@ gopher = []
 
 [dependencies]
 anyhow = "1.0.100"
-const_format = { version = "0.2.34", features = ["rust_1_83"] }
+const_format = { version = "0.2.35", features = ["rust_1_83"] }
 ctrlc = "3.5.0"
 env_logger = "0.11.6"
 futures = { version = "0.3.31", default-features = false, features = [
