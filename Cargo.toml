@@ -33,7 +33,7 @@ time = []
 gopher = []
 
 [dependencies]
-anyhow = "1.0.101"
+anyhow = "1.0.102"
 const_format = { version = "0.2.35", features = ["rust_1_83"] }
 ctrlc = "3.5.2"
 env_logger = "0.11.9"
