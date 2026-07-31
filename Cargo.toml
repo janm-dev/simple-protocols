@@ -6,7 +6,7 @@ edition = "2024"
 description = "Implementations of several simple network protocols"
 keywords = ["Echo", "Discard", "Daytime", "CHARGEN", "Time"]
 repository = "https://github.com/janm-dev/simple-protocols"
-rust-version = "1.85.0"
+rust-version = "1.97.1"
 
 [features]
 default = [
@@ -34,7 +34,9 @@ gopher = []
 
 [dependencies]
 anyhow = "1.0.102"
-const_format = { version = "0.2.36", features = ["rust_1_83"] }
+const_format = { version = "0.2.36", features = [
+	"rust_1_83",
+] }
 ctrlc = "3.5.2"
 env_logger = "0.11.10"
 futures = { version = "0.3.32", default-features = false, features = [
@@ -45,7 +47,7 @@ log = { version = "0.4.31", features = ["std"] }
 pico-args = { version = "0.5.0", features = [
 	"eq-separator",
 ] }
-rand = "0.9.2"
+rand = "0.10.2"
 smol = "2.0.2"
 socket2 = "0.6.4"
 time = { version = "0.3.45", features = ["formatting"] }

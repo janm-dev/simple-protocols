@@ -173,19 +173,19 @@ async fn handle_tcp(mut stream: TcpStream) {
 			Ok(msg) => {
 				info!("new message received {msg}");
 
-				if let Some(reply) = reply {
-					if let Err(e) = stream.write_all(&reply).await {
-						warn!("error writing data: {e}")
-					}
+				if let Some(reply) = reply
+					&& let Err(e) = stream.write_all(&reply).await
+				{
+					warn!("error writing data: {e}")
 				}
 			}
 			Err(err) => {
 				warn!("error handling message: {err}");
 
-				if let Some(reply) = reply {
-					if let Err(e) = stream.write_all(&reply).await {
-						warn!("error writing data: {e}")
-					}
+				if let Some(reply) = reply
+					&& let Err(e) = stream.write_all(&reply).await
+				{
+					warn!("error writing data: {e}")
 				}
 			}
 		}
@@ -213,20 +213,20 @@ async fn handle_udp((data, addr, replier): (Vec<u8>, SocketAddr, Sender<Vec<u8>>
 		Ok(msg) => {
 			info!("new message received {msg}");
 
-			if let Some(reply) = reply {
-				if replier.send(reply.into_owned()).await.is_err() {
-					warn!("UDP channel closed");
-				};
-			}
+			if let Some(reply) = reply
+				&& replier.send(reply.into_owned()).await.is_err()
+			{
+				warn!("UDP channel closed");
+			};
 		}
 		Err(err) => {
 			warn!("error handling message: {err}");
 
-			if let Some(reply) = reply {
-				if replier.send(reply.into_owned()).await.is_err() {
-					warn!("UDP channel closed");
-				};
-			}
+			if let Some(reply) = reply
+				&& replier.send(reply.into_owned()).await.is_err()
+			{
+				warn!("UDP channel closed");
+			};
 		}
 	}
 }

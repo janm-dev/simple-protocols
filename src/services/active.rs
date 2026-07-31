@@ -4,7 +4,7 @@ use std::net::SocketAddr;
 
 use const_format::str_split;
 use log::{info, warn};
-use rand::{Rng, seq::IndexedRandom};
+use rand::{RngExt, seq::IndexedRandom};
 use smol::{
 	channel::{self, Sender},
 	io::AsyncWriteExt,
@@ -88,7 +88,7 @@ impl SimpleService for Service {
 }
 
 async fn handle_tcp(mut stream: TcpStream) {
-	let usernames = USERNAMES.choose_multiple(&mut rand::rng(), rand::rng().random_range(5..500));
+	let usernames = USERNAMES.sample(&mut rand::rng(), rand::rng().random_range(5..500));
 
 	let mut buf = Vec::with_capacity(512);
 	for username in usernames {
@@ -107,7 +107,7 @@ async fn handle_tcp(mut stream: TcpStream) {
 }
 
 async fn handle_udp((_, _, reply): (Vec<u8>, SocketAddr, Sender<Vec<u8>>)) {
-	let usernames = USERNAMES.choose_multiple(&mut rand::rng(), rand::rng().random_range(5..500));
+	let usernames = USERNAMES.sample(&mut rand::rng(), rand::rng().random_range(5..500));
 
 	let mut buf = Vec::with_capacity(512);
 	for username in usernames {

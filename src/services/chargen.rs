@@ -3,7 +3,7 @@
 use std::net::SocketAddr;
 
 use log::{info, warn};
-use rand::Rng;
+use rand::RngExt;
 use smol::{channel, channel::Sender, io::AsyncWriteExt, net::TcpStream, spawn};
 
 use crate::{
